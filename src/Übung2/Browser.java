@@ -7,6 +7,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.CyclicBarrier;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -20,16 +21,16 @@ public class Browser extends JFrame implements ActionListener{
 	private JButton startButton;
 
     // Deklaration Ihrer Synchronisations-Hilfsklassen hier:
-    private Thread[] downloadThreads;
     private CountDownLatch latch;
+	private CyclicBarrier barrier;
     
     public Browser(int downloads) {
         super("Mein Download-Browser");
         this.downloads = downloads;
         
         // Initialisierung Ihrer Synchronisations-Hilfsklassen hier:
-        this.downloadThreads = new Thread[downloads];
-        this.latch = new CountDownLatch(downloads);
+        this.latch = new CountDownLatch(1);
+        this.barrier = new CyclicBarrier(downloads + 1);
 
 		// Aufbau der GUI-Elemente:	
 		balken = new JProgressBar[downloads];
@@ -42,13 +43,10 @@ public class Browser extends JFrame implements ActionListener{
 			reihe.add(balken[i]);
 			zeilen.add(reihe);
 
-
-
             // neue Download-Threads erzeugen und starten
             // ggf. müssen Synchronisations-Objekte im Konstruktor übergeben werden!!
             // balken ist ebenfalls zu übergeben!
-            downloadThreads[i] = new Thread(new Download(balken[i], latch));
-
+            new Thread(new Download(balken[i], barrier, latch)).start();
 		}
 
 		startButton = new JButton("Downloads starten");
@@ -57,7 +55,6 @@ public class Browser extends JFrame implements ActionListener{
 		this.add(zeilen, BorderLayout.CENTER);
 		this.add(startButton, BorderLayout.SOUTH);
 		
-		
 		pack();
 		setVisible(true);
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -65,19 +62,13 @@ public class Browser extends JFrame implements ActionListener{
 	
 	public static void main(String[] args) throws InterruptedException {
 		new Browser(5);
-		
-
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// Blockierte Threads jetzt laufen lassen:
 		
-		if (startButton.isEnabled() == true) {
-			for (int i = 0; i < downloads; i++) {
-				downloadThreads[i].start();
-			}
-		}
+		latch.countDown();
 
 		startButton.setEnabled(false);
 		startButton.setSelected(false);
@@ -88,10 +79,9 @@ public class Browser extends JFrame implements ActionListener{
 		new Thread() {
 			public void run() {
 				try {
-					latch.await();
-
+					barrier.await();
 					startButton.setText("ENDE");
-				} catch (InterruptedException ex) {
+				} catch (Exception ex) {
 					// handle exception - ignore
 				}
 			}
