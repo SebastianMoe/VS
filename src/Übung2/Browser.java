@@ -16,7 +16,7 @@ import javax.swing.JProgressBar;
 
 public class Browser extends JFrame implements ActionListener{
 	
-	private int downloads;
+	//private int downloads;
 	private JProgressBar[] balken;
 	private JButton startButton;
 
@@ -26,7 +26,7 @@ public class Browser extends JFrame implements ActionListener{
     
     public Browser(int downloads) {
         super("Mein Download-Browser");
-        this.downloads = downloads;
+        //this.downloads = downloads;
         
         // Initialisierung Ihrer Synchronisations-Hilfsklassen hier:
         this.latch = new CountDownLatch(1);

@@ -1,6 +1,6 @@
 Ein Software-Unternehmen betreibt ein Support-Center, das Kundenanfragen über ein Ticket-System verarbeitet. Das System verwaltet Tickets in drei verschiedenen Prioritätsstufen.
 
-5 Kunden erstellen kontinuierlich Support-Tickets mit unterschiedlichen Prioritäten (High, Medium, Low) und stellen diese in das System ein. Jeder Kunde wartet dabei zufällig 0-10 Sekunden zwischen den einzelnen Tickets. 5 Support-Mitarbeiter bearbeiten die Tickets nach einem festen Prioritätsprinzip: Zuerst werden alle High-Tickets abgearbeitet, dann Medium-Tickets und zuletzt Low-Tickets. Jeder Mitarbeiter benötigt zufällig 0-8 Sekunden zur Bearbeitung eines Tickets.
+5 Kunden erstellen kontinuierlich Support-Tickets mit unterschiedlichen Prioritäten (High, Low) und stellen diese in das System ein. Jeder Kunde wartet dabei zufällig 0-10 Sekunden zwischen den einzelnen Tickets. 5 Support-Mitarbeiter bearbeiten die Tickets nach einem festen Prioritätsprinzip: Zuerst werden alle High-Tickets abgearbeitet, dann Medium-Tickets und zuletzt Low-Tickets. Jeder Mitarbeiter benötigt zufällig 0-8 Sekunden zur Bearbeitung eines Tickets.
 
 Innerhalb einer Prioritätsstufe werden die Tickets in der Reihenfolge bearbeitet, in der sie erstellt wurden (FIFO - First In, First Out). Ticket-Objekte sollen in einer passenden Collection (z. B. java.util.Deque) gespeichert werden.
 

@@ -27,7 +27,7 @@ public class KitchenCounter {
                 }
             }
             currentMeals++;
-            leereTheke.signalAll();
+            leereTheke.signal();
         } finally {
             monitor.unlock();
         }
@@ -45,7 +45,7 @@ public class KitchenCounter {
                 }
             }
             currentMeals--;
-            volleTheke.signalAll();
+            volleTheke.signal();
         } finally {
             monitor.unlock();
         }

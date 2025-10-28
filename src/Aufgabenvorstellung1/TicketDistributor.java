@@ -63,35 +63,41 @@ public class TicketDistributor {
     
     
     // Employee processes tickets (priority order)
-    public Ticket processTicket() throws InterruptedException {
-        while (true) {
-            highLock.lock();
-            try {
-                if (!highPriorityTickets.isEmpty()) {
-                    Ticket ticket = highPriorityTickets.removeFirst();
-                    System.out.println("[Employee] HIGH-Ticket processed: " + ticket.getTitle());
-                    highSpaceFree.signal(); 
-                    return ticket;
-                }
-            } finally {
-                highLock.unlock();
-            }
-            
-            lowLock.lock();
-            try {
-                if (!lowPriorityTickets.isEmpty()) {
-                    Ticket ticket = lowPriorityTickets.removeFirst();
-                    System.out.println("[Employee] LOW-Ticket processed: " + ticket.getTitle());
-                    lowSpaceFree.signal();
-                    return ticket;
-                }
-                
+    public void processTicket() throws InterruptedException {
+        while (highPriorityTickets.isEmpty() && lowPriorityTickets.isEmpty()) {
+            try{
+                lowLock.lock();
                 System.out.println("[Employee] All queues empty - waiting...");
                 lowAvailable.await();
-                
+
+            } catch (InterruptedException e) {
+                // handle exception - ignore
             } finally {
                 lowLock.unlock();
             }
+        }
+
+        highLock.lock();
+        try {
+            if (!highPriorityTickets.isEmpty()) {
+                Ticket ticket = highPriorityTickets.removeFirst();
+                System.out.println("[Employee] HIGH-Ticket processed: " + ticket.getTitle());
+                highSpaceFree.signal(); 
+            }
+        } finally {
+            highLock.unlock();
+        }
+        
+        lowLock.lock();
+        try {
+            if (!lowPriorityTickets.isEmpty()) {
+                Ticket ticket = lowPriorityTickets.removeFirst();
+                System.out.println("[Employee] LOW-Ticket processed: " + ticket.getTitle());
+                lowSpaceFree.signal();
+            }
+            
+        } finally {
+            lowLock.unlock();
         }
     }
 }
