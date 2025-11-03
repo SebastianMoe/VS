@@ -2,7 +2,7 @@ package Aufgabenvorstellung1;
 
 public class Simulation {
     public static void main(String[] args) throws InterruptedException {
-        TicketDistributor distributor = new TicketDistributor(10);
+        TicketDistributorSimple distributor = new TicketDistributorSimple(10);
 
         for(int i = 1; i <= 8; i++) {
             Thread threadCustomer = new Thread(new Customer("Customer " + i, distributor));

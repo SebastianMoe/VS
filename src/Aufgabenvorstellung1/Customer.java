@@ -3,11 +3,11 @@ package Aufgabenvorstellung1;
 import java.util.Random;
 
 public class Customer implements Runnable {
-    private TicketDistributor distributor;
+    private TicketDistributorSimple distributor;
     private String name;
     private int ticketCount = 0;
 
-    public Customer(String name, TicketDistributor distributor) {
+    public Customer(String name, TicketDistributorSimple distributor) {
         this.name = name;
         this.distributor = distributor;
     }

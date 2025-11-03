@@ -64,19 +64,6 @@ public class TicketDistributor {
     
     // Employee processes tickets (priority order)
     public void processTicket() throws InterruptedException {
-        while (highPriorityTickets.isEmpty() && lowPriorityTickets.isEmpty()) {
-            try{
-                lowLock.lock();
-                System.out.println("[Employee] All queues empty - waiting...");
-                lowAvailable.await();
-
-            } catch (InterruptedException e) {
-                // handle exception - ignore
-            } finally {
-                lowLock.unlock();
-            }
-        }
-
         highLock.lock();
         try {
             if (!highPriorityTickets.isEmpty()) {
@@ -98,6 +85,28 @@ public class TicketDistributor {
             
         } finally {
             lowLock.unlock();
+        }
+
+        if (highPriorityTickets.isEmpty() && lowPriorityTickets.isEmpty()) {
+            highLock.lock();
+            try {
+                while (highPriorityTickets.isEmpty()) {
+                    System.out.println("[Employee] No HIGH tickets - waiting...");
+                    highAvailable.await();
+                }
+            } finally {
+                highLock.unlock();
+            }
+            
+            lowLock.lock();
+            try {
+                while (lowPriorityTickets.isEmpty()) {
+                    System.out.println("[Employee] No LOW tickets - waiting...");
+                    lowAvailable.await();
+                }
+            } finally {
+                lowLock.unlock();
+            }
         }
     }
 }

@@ -3,9 +3,9 @@ package Aufgabenvorstellung1;
 import java.util.Random;
 
 public class Employee implements Runnable {
-    private TicketDistributor distributor;
+    private TicketDistributorSimple distributor;
     
-    public Employee(TicketDistributor distributor) {
+    public Employee(TicketDistributorSimple distributor) {
         this.distributor = distributor;
     }
 
