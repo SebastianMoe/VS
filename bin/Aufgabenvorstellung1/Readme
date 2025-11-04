@@ -5,3 +5,5 @@ Ein Software-Unternehmen betreibt ein Support-Center, das Kundenanfragen über e
 Innerhalb einer Prioritätsstufe werden die Tickets in der Reihenfolge bearbeitet, in der sie erstellt wurden (FIFO - First In, First Out). Ticket-Objekte sollen in einer passenden Collection (z. B. java.util.Deque) gespeichert werden.
 
 Jede Prioritätswarteschlange hat eine Maximalkapazität von 10 Tickets. Wenn eine Warteschlange voll ist, muss der entsprechende Kunde warten, bis wieder Platz frei wird.
+
+done
