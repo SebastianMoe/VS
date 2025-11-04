@@ -18,21 +18,17 @@ public class Server {
             byte[] buffer = new byte[MAX_LENGTH];
             
             while(true) {
-                // Empfange Paket
                 DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
                 socket.receive(packet);
                 
-                // Extrahiere Nachricht
                 String message = new String(packet.getData(), 0, packet.getLength());
                 String senderAddress = packet.getAddress().getHostAddress();
                 int senderPort = packet.getPort();
                 
-                // Ausgabe auf Konsole
                 System.out.println("Von: " + senderAddress + ":" + senderPort);
                 System.out.println("Nachricht: " + message);
                 System.out.println("Länge: " + packet.getLength() + " Bytes");
                 
-                // Prüfe auf "Ende"
                 if (message.equals("Ende")) {
                     System.out.println("\n'Ende' empfangen - Receiver beendet.");
                     break;

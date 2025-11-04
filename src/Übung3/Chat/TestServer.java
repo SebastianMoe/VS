@@ -8,28 +8,27 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TestServer {
     private static final int SERVER_PORT = 1212;
 
     public static void main(String[] args) {
-        try {
-            ServerSocket serverSocket = new ServerSocket(SERVER_PORT);
+        try (ServerSocket serverSocket = new ServerSocket(SERVER_PORT)) {
+            
             System.out.println("Warte auf Verbindungen...");
 
-            AtomicBoolean in2minutes = new AtomicBoolean(true);
 
-            new Thread(() -> {
-                try {
-                    Thread.sleep(120000);
-                    in2minutes.set(false);
-                    serverSocket.close();
-                    System.out.println("Server wird heruntergefahren...");
-                } catch (InterruptedException | IOException e) {
-                    e.printStackTrace();
-                }
-            }).start();
+            /*
+             * 
+             new Thread(() -> {
+                 try {
+                     Thread.sleep(6000);
+                     System.out.println("Server wird heruntergefahren...");
+                 } catch (InterruptedException e) {
+                     e.printStackTrace();
+                 }
+             }).start();
+             */
 
             while(true) {
                 try {
@@ -50,13 +49,15 @@ public class TestServer {
                 writer.println("Hello " + message + "! You can start chatting now. Type 'Bye' to exit.");
                 writer.flush();
 
-                while (running && in2minutes.get()) {
+                while (running) {
 
                     message = reader.readLine();
                     System.out.println(message);
                     
                     if (message.equalsIgnoreCase("Bye")) {
                         running = false;
+                        s.close();
+                        continue;
                     }
 
                     writer.println("*" + message + "*");
@@ -64,7 +65,7 @@ public class TestServer {
                     
                     System.out.println("Verbindung geschlossen.\n");
                 }
-                s.close();
+                //s.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

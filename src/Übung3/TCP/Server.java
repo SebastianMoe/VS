@@ -14,27 +14,25 @@ public class Server {
         try (ServerSocket serverSocket = new ServerSocket(8080)) {
             System.out.println("Warte auf Verbindungen...");
             
+            Socket s = serverSocket.accept();
+            System.out.println("Neue Verbindung von " + s.getInetAddress().getHostAddress() + ":" + s.getPort());
+
+            InputStream in = s.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            
+            OutputStream out = s.getOutputStream();
+            PrintWriter writer = new PrintWriter(out);
+
             while(true) {
                 try {
-                Socket s = serverSocket.accept();
-                System.out.println("Neue Verbindung von " + s.getInetAddress().getHostAddress() + ":" + s.getPort());
-
-                InputStream in = s.getInputStream();
-                BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(in)
-                );
-
-                OutputStream out = s.getOutputStream();
-                PrintWriter writer = new PrintWriter(out);
-
-                String message = reader.readLine();
-                System.out.println(message);
-                
-                writer.println("*" + message + "*");
-                writer.flush();
-                
-                s.close();
-                System.out.println("Verbindung geschlossen.\n");
+                    String message = reader.readLine();
+                    System.out.println(message);
+                    
+                    writer.println("*" + message + "*");
+                    writer.flush();
+                    
+                    s.close();
+                    System.out.println("Verbindung geschlossen.\n");
                     
                 } catch (IOException e) {
                     e.printStackTrace();
