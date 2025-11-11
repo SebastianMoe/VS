@@ -52,7 +52,7 @@ public class Client {
                 }
             }).start();
 
-            
+            scanner.close();
             System.out.println("\nVerbindung geschlossen.");
             
         } catch (IOException e) {
